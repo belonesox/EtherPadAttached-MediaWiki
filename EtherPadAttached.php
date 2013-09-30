@@ -52,8 +52,9 @@ $wgExtensionCredits['other'][] = array(
     'url'         => 'http://wiki.4intra.net/EtherPadAttached',
 );
 
-$wgEtherPadAttachedPadUrl  = "http://…";
-$wgEtherPadAttachedCalcUrl = "http://…";
+$wgEtherPadAttachedPadUrl  = "";
+$wgEtherPadAttachedCalcUrl = "";
+$wgEtherPadAttachedDrawUrl = "";
 
 class EtherPadAttached
 {
@@ -73,7 +74,7 @@ class EtherPadAttached
     static function SkinTemplateToolboxEnd($tpl)
     {
         self::fillActions();
-        foreach (array('go2pad', 'go2calc') as $link)
+        foreach (array('go2pad', 'go2calc', 'go2draw') as $link)
             if (!empty(self::$actions[$link]))
                 print '<li id="t-'.$link.'" title="'.
                     htmlspecialchars(self::$actions[$link]['tooltip']).
@@ -94,6 +95,7 @@ class EtherPadAttached
 
         global $wgEtherPadAttachedPadUrl;
         global $wgEtherPadAttachedCalcUrl;
+        global $wgEtherPadAttachedDrawUrl;
 
         self::$actions = array();
 
@@ -113,25 +115,40 @@ class EtherPadAttached
 
         wfLoadExtensionMessages('EtherPadAttached');
 
-        $padurl = $wgEtherPadAttachedPadUrl . 'article-' . $wgTitle->getArticleID() 
-                                . '?monospaced-font=true'
-                                . '&showChat=false&showLineNumbers=false&showControls=false';
+        if (strlen($wgEtherPadAttachedPadUrl)>1){
+            $padurl = $wgEtherPadAttachedPadUrl . 'article-' . $wgTitle->getArticleID() 
+                                    . '?monospaced-font=true'
+                                    . '&showChat=false&showLineNumbers=false&showControls=false';
+            
+            self::$actions['go2pad'] = array(
+                'text' => wfMsg('etherpad-link' ),
+                'tooltip' => wfMsg('tooltip-etherpad-link'),
+                'href' => $padurl,
+                'class' => '',
+            );
+        }    
         
-        self::$actions['go2pad'] = array(
-            'text' => wfMsg('etherpad-link' ),
-            'tooltip' => wfMsg('tooltip-etherpad-link'),
-            'href' => $padurl,
-            'class' => '',
-        );
-        
-        $calcurl = $wgEtherPadAttachedCalcUrl . 'article-' . $wgTitle->getArticleID();
-        
-        self::$actions['go2calc'] = array(
-            'text' => wfMsg('ethercalc-link' ),
-            'tooltip' => wfMsg('tooltip-ethercalc-link'),
-            'href' => $calcurl,
-            'class' => '',
-        );
+        if (strlen($wgEtherPadAttachedCalcUrl)>1){
+            $calcurl = $wgEtherPadAttachedCalcUrl . 'article-' . $wgTitle->getArticleID();
+            
+            self::$actions['go2calc'] = array(
+                'text' => wfMsg('ethercalc-link' ),
+                'tooltip' => wfMsg('tooltip-ethercalc-link'),
+                'href' => $calcurl,
+                'class' => '',
+            );
+        }    
+
+        if (strlen($wgEtherPadAttachedDrawUrl)>1){
+            $drawurl = $wgEtherPadAttachedDrawUrl . 'article-' . $wgTitle->getArticleID();
+            
+            self::$actions['go2draw'] = array(
+                'text' => wfMsg('etherdraw-link' ),
+                'tooltip' => wfMsg('tooltip-etherdraw-link'),
+                'href' => $drawurl,
+                'class' => '',
+            );
+        }
         return true;
     }
 }
