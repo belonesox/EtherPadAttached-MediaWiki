@@ -113,35 +113,39 @@ class EtherPadAttached
         if (in_array($action, $disallow_actions))
             return false;
 
-        wfLoadExtensionMessages('EtherPadAttached');
+        if (function_exists("wfLoadExtensionMessages")){
+            wfLoadExtensionMessages('EtherPadAttached');
+            // Just for compatibility with older versions of MW
+            // wfLoadExtensionMessages need to be removed
+        }
 
         if (strlen($wgEtherPadAttachedPadUrl)>1){
-            $padurl = $wgEtherPadAttachedPadUrl . 'article-' . $wgTitle->getArticleID() 
+            $padurl = $wgEtherPadAttachedPadUrl . 'article-' . $wgTitle->getArticleID()
                                     . '?monospaced-font=true'
                                     . '&showChat=false&showLineNumbers=false&showControls=false';
-            
+
             self::$actions['go2pad'] = array(
                 'text' => wfMsg('etherpad-link' ),
                 'tooltip' => wfMsg('tooltip-etherpad-link'),
                 'href' => $padurl,
                 'class' => '',
             );
-        }    
-        
+        }
+
         if (strlen($wgEtherPadAttachedCalcUrl)>1){
             $calcurl = $wgEtherPadAttachedCalcUrl . 'article-' . $wgTitle->getArticleID();
-            
+
             self::$actions['go2calc'] = array(
                 'text' => wfMsg('ethercalc-link' ),
                 'tooltip' => wfMsg('tooltip-ethercalc-link'),
                 'href' => $calcurl,
                 'class' => '',
             );
-        }    
+        }
 
         if (strlen($wgEtherPadAttachedDrawUrl)>1){
             $drawurl = $wgEtherPadAttachedDrawUrl . 'article-' . $wgTitle->getArticleID();
-            
+
             self::$actions['go2draw'] = array(
                 'text' => wfMsg('etherdraw-link' ),
                 'tooltip' => wfMsg('tooltip-etherdraw-link'),
